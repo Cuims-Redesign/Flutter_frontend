@@ -1,9 +1,7 @@
-import 'package:attendence/MainScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:dio/dio.dart';
+import 'MainScreen.dart';
+import 'function.dart';
 
 class AttendScreen extends StatelessWidget {
   final String username;
@@ -35,29 +33,12 @@ class Load extends StatefulWidget {
 }
 
 class _Load extends State<Load> {
-  List data;
+  List data, attend;
+
   @override
   void initState() {
     super.initState();
-    this.getdata(widget.user, widget.pass);
-  }
-
-  getdata(user, pass) async {
-    print(user + pass);
-    data = null;
-    var url = 'https://cuims-api.herokuapp.com/login/?username=18bcs4028&password=Dikshit_7';
-    var response = await http.get(url);
-    var i = jsonDecode(response.body);
-    setState(() {
-      data = i;
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MainScreen(
-                    data: data,
-                  )));
-    });
-    return 'Success';
+    getdata(widget.user, widget.pass, context);
   }
 
   @override
@@ -86,7 +67,6 @@ class LoadingScreen extends StatelessWidget {
             flex: 1,
             child: Image(
               image: AssetImage('images/loader.gif'),
-              // /image: NetworkImage('https://i.gifer.com/9u1B.gif'),
             )),
         SizedBox(
           child: Container(color: Colors.white),
@@ -121,18 +101,64 @@ class LoadingScreen extends StatelessWidget {
                       )),
                 ),
                 Expanded(child: Container()),
-                Center(
-                  child: FadeAnimatedTextKit(
-                    text: [".", "..", "...", "....", "......"],
-                    textStyle:
-                        TextStyle(fontSize: 40.0, color: Colors.white70, fontFamily: 'NotoSans'),
-                  ),
-                ),
+                Center(child: Status()),
               ],
             ),
           ),
         )
       ],
     ));
+  }
+}
+
+class Status extends StatefulWidget {
+  final String user;
+  final String pass;
+
+  const Status({
+    Key key,
+    this.user,
+    this.pass,
+  }) : super(key: key);
+  @override
+  _StatusState createState() => _StatusState();
+}
+
+class _StatusState extends State<Status> {
+  List<String> _currentstatus;
+  void initState() {
+    _currentstatus = formlist('Logging In');
+    super.initState();
+    updater();
+  }
+
+  updater() async {
+    var data = await getdata(widget.user, widget.pass, context);
+    setState(() {
+      _currentstatus = formlist('Getting Attendence');
+    });
+
+    var attend = await getAttendence(data);
+    setState(() {
+      _currentstatus = formlist('Getting Picture');
+    });
+
+    var image = await getimage(data);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MainScreen(
+                  attend: attend,
+                  image: image,
+                )));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeAnimatedTextKit(
+      text: _currentstatus,
+      textStyle: TextStyle(fontSize: 18.0, color: Colors.white70, fontFamily: 'NotoSans'),
+    );
   }
 }

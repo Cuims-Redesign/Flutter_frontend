@@ -47,10 +47,8 @@ class MyHomePage extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         "to the ",
-                        style: TextStyle(
-                            fontSize: 50.0,
-                            color: Colors.white,
-                            fontFamily: 'NotoSans'),
+                        style:
+                            TextStyle(fontSize: 50.0, color: Colors.white, fontFamily: 'NotoSans'),
                       ),
                       TypewriterAnimatedTextKit(
                         text: [
@@ -122,8 +120,7 @@ class TaskInput extends StatelessWidget {
                 obscureText: hide,
                 style: TextStyle(color: Colors.white, fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 23, horizontal: 10),
+                  contentPadding: EdgeInsets.symmetric(vertical: 23, horizontal: 10),
                   labelStyle: TextStyle(
                     color: Colors.white70,
                     fontSize: 16,
@@ -156,11 +153,10 @@ class LoginButton extends StatelessWidget {
       child: Container(
           width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-          height: 55,
+          height: 60,
           child: RaisedButton(
             color: Color(0xDDEF0000),
-            shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0)),
+            shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
             child: Icon(
               Icons.check,
               size: 40,
